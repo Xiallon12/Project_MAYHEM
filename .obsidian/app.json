@@ -1,0 +1,13 @@
+{
+  "showLineNumber": false,
+  "vimMode": false,
+  "readableLineLength": false,
+  "showInlineTitle": false,
+  "strictLineBreaks": false,
+  "smartIndentList": true,
+  "tabSize": 4,
+  "useTab": true,
+  "attachmentFolderPath": "./charts",
+  "promptDelete": false,
+  "newFileLocation": "current"
+}

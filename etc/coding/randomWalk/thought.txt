@@ -1,0 +1,69 @@
+what's our goal? our goal is to make a program that has a 10*10 grid
+a cursor starts at a random position in that grid with the letter A
+then chooses a random direction, right, left, up, down
+if that direction isn't out of bounds, and does not already
+have a letter, walk there.
+
+the program ends when you reach the letter Z, or when a cursor has no
+free direction to go to.
+
+at the beginning of the program, you'll need to have a map of the
+letters, and to have an empty grid, empty meaning it has no letters
+only dots
+
+so we need two variables, one named alphabet that has the 26 letters
+and one named grid, which is a char 2d array with 10*10 elements
+
+to make the alphabet variable we make a char array that is a string
+literal and put the letters in it
+
+to make the grid we do a nested for loop for the indeces of outer and
+inner matrices aka rows and columns and make sure each element in the
+grid is '.'
+
+now we need to introduce randomness
+srand with time, then get 2 numbers x and y
+where x is horizontal row number and y is vertical column number
+and that's where the cursor starts, so you change that place in the
+grid to letter A
+
+that means we need variables x and y
+
+now we start looping
+what do we exactly need?
+we need to get a random direction
+then check if it's accessible
+then check whether there're letters there or not
+
+we can check accessibility by checking whether the current cursor is on the boundary of that direction
+if y is 0 you can't go up
+if x is 0 you can't go left
+if y is 9 you can't go down
+if x is 9 you can't go right
+
+we can check for letters by subscripting the goal square
+if it's not a '.', it's a letter.
+
+if it passes the two tests, simply change the cursor to there by
+changing one of the two x y coordinates according to the chosen dir
+
+if it doesn't pass, we need a way to make it use another random dir
+and a way to remember how many directions it tried to move at
+so that once it fails all four directions, the program ends
+
+we can do that by manipulating the dynamic between switch and while,
+since i think it's better done with a while loop than a for loop
+
+so what we'll do is define a usedDirections array to mark each dir done
+as true
+and we'll make a tries int variable to count the number of times a dir
+was used
+then we'll make a while loop that as long as tries isn't equal to 0 it
+can continue
+then as long as the direction wasn't mark used it'll be used in the
+switch, then if it works the thing ends, but if it doesn't it 
+continues, increases tries, and marks the dir used
+and once the four directions are used and the four of them were
+unavailable the program will end
+
+sure, let's execute

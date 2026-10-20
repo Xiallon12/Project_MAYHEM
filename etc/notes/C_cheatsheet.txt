@@ -1,0 +1,552 @@
+================================================================================
+  C LANGUAGE — CODING REFERENCE
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+ PROGRAM SKELETON & COMPILATION
+────────────────────────────────────────────────────────────────────────────────
+
+#include <stdio.h>
+int main(void) {
+    /* declarations before statements (mandatory pre-C99) */
+    return 0;
+}
+
+GCC options:
+  gcc file.c -o file               basic compile
+  gcc -Wall -W -pedantic           all/most/necessary warnings
+  -std=c89 / -std=c99             language standard
+  -lm                              link math library
+  -DMACRO=val / -UMACRO           define / undefine macro at compile time
+  gcc -o out f1.c f2.c ...        multi-file compile
+
+
+────────────────────────────────────────────────────────────────────────────────
+ TYPES & LITERALS
+────────────────────────────────────────────────────────────────────────────────
+
+Integer types:
+  int  short  long  long long  (C99)
+  unsigned int  unsigned long  ...
+  char    (specify signed/unsigned explicitly if it matters)
+  _Bool   (C99)  →  <stdbool.h> gives bool
+
+Float types:
+  float   double   long double
+
+Suffixes on literals:
+  69L / 69l        long
+  69U / 69u        unsigned
+  69UL             unsigned long
+  69LL             long long  (C99)
+  1.0f / 1.0F      float
+  1.0L             long double
+  0755             octal
+  0xFF / 0XFF      hexadecimal
+
+stdint.h (C99) — fixed-width:
+  int8_t   int16_t   int32_t   int64_t
+  uint8_t  uint16_t  uint32_t  uint64_t
+
+sizeof:
+  sizeof(type)  /  sizeof expr
+  returns size_t — cast to (int) for %d in printf
+
+Casting:
+  (type) value
+
+typedef:
+  typedef unsigned int Bool;
+  typedef struct { ... } Person;
+
+Common predefined types:
+  size_t        unsigned long int
+  ptrdiff_t     long int
+  wchar_t       int
+
+
+────────────────────────────────────────────────────────────────────────────────
+ PRINTF / SCANF CONVERSION SPECIFIERS
+────────────────────────────────────────────────────────────────────────────────
+
+  %d / %i          int (decimal)
+  %u               unsigned int
+  %o / %x / %X     unsigned: octal / hex lower / hex upper
+  %hd / %ld / %lld short / long / long long
+  %f               double (printf) or float (scanf)
+  %lf              double — REQUIRED for scanf
+  %e / %E          scientific notation
+  %g / %G          shorter of %f and %e
+  %c               char
+  %s               string (char array)
+  %p               pointer address
+  %%               literal %
+
+Format: %(-)m.pX
+  m  = min field width  (- = left-align, adds trailing space)
+  p  = precision (type-specific)
+
+  printf("%8.2f", 3.14);    →  "    3.14"
+  printf("%-8d", 42);       →  "42      "
+
+scanf — skip whitespace before %c:
+  scanf(" %c", &ch);
+
+
+────────────────────────────────────────────────────────────────────────────────
+ OPERATORS  (highest → lowest precedence)
+────────────────────────────────────────────────────────────────────────────────
+
+  Postfix           a[i]  f()  .  ->  x++  x--
+  Unary / Prefix    ++x  --x  +  -  !  ~  (type)  *  &  sizeof
+  Multiplicative    *  /  %
+  Additive          +  -
+  Shift             <<  >>
+  Relational        <  <=  >  >=
+  Equality          ==  !=
+  Bitwise AND       &
+  Bitwise XOR       ^
+  Bitwise OR        |
+  Logical AND       &&   (short-circuit)
+  Logical OR        ||   (short-circuit)
+  Conditional       ?:
+  Assignment        =  +=  -=  *=  /=  %=  &=  |=  ^=  <<=  >>=
+  Comma             ,
+
+Notes:
+  Binary ops: left-associative.
+  Unary / ?: / assignment: right-associative.
+  && and || short-circuit: right side NOT evaluated if left decides result.
+
+
+────────────────────────────────────────────────────────────────────────────────
+ CONTROL FLOW
+────────────────────────────────────────────────────────────────────────────────
+
+if / else if / else:
+  if (expr) {
+      ...
+  } else if (expr) {
+      ...
+  } else {
+      ...
+  }
+
+Ternary:
+  condition ? true_val : false_val;
+
+switch:
+  switch (var) {
+      case CONST: ...; break;
+      default:    ...; break;
+  }
+  Case values must be constant integers/chars/macros.
+  Stacking cases (no break) falls through to the next case.
+
+while:
+  while (cond) { ... }
+
+do-while:
+  do { ... } while (cond);
+
+for:
+  for (init; cond; post) { ... }
+
+for idioms:
+  for (i = 0; i < n; i++)      /* 0 to n-1    */
+  for (i = 1; i <= n; i++)     /* 1 to n      */
+  for (i = n-1; i >= 0; i--)   /* n-1 down to 0 */
+  for (;;)                      /* infinite    */
+
+break    exits innermost loop/switch.
+continue skips to next iteration.
+
+goto:
+  goto label;
+  ...
+  label: statement;
+  (use to break out of nested loops)
+
+
+────────────────────────────────────────────────────────────────────────────────
+ ARRAYS
+────────────────────────────────────────────────────────────────────────────────
+
+Declaration & init:
+  int a[10];
+  int a[5] = {1,2,3,4,5};
+  int a[]  = {1,2,3};           /* length inferred = 3 */
+  int a[10] = {0};              /* all zeros */
+
+Designated initializers (C99):
+  int a[10] = {[2]=3, [8]=15};
+
+Multidimensional:
+  int m[3][4];
+  int m[3][4] = {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+
+VLA (C99):
+  int n; scanf("%d", &n);
+  int a[n];
+  /* no static duration; cannot be initialized */
+
+Idioms:
+  /* clear */
+  for (i = 0; i < N; i++) a[i] = 0;
+
+  /* sum */
+  for (i = 0; i < N; i++) sum += a[i];
+
+  /* copy */
+  for (i = 0; i < N; i++) a[i] = b[i];
+  /* or */
+  memcpy(a, b, sizeof(a));      /* <string.h> */
+
+Length of array (not a parameter):
+  sizeof(a) / sizeof(a[0])
+
+Compound literal (on-the-fly):
+  f((int[]){1, 2, 3});
+
+Letter-to-index idiom:
+  a[ch-'a']    /* small letter → index 0-25 */
+  a[ch-'A']    /* capital      → index 0-25 */
+
+Const array:
+  const int a[5] = {1,2,3,4,5};
+
+
+────────────────────────────────────────────────────────────────────────────────
+ FUNCTIONS
+────────────────────────────────────────────────────────────────────────────────
+
+Definition:
+  return_type name(type param, ...) {
+      declarations;
+      statements;
+      return value;
+  }
+
+Prototype (before main):
+  return_type name(type, type, ...);
+
+void function:
+  void print_hello(void) {
+      printf("hello\n");
+  }
+
+Discard return value (convention):
+  (void) printf("hi\n");
+
+Exit program:
+  #include <stdlib.h>
+  exit(EXIT_SUCCESS);
+  exit(EXIT_FAILURE);
+
+Array parameter:
+  void f(int a[], int n);
+  void f(int *a,  int n);    /* equivalent */
+  /* call: f(arr, N);  — no [] in call */
+
+2D array parameter:
+  void f(int m[][COLS], int rows);
+
+VLA parameter (C99):
+  void f(int n, int a[n]);
+
+Pointer parameter (modify caller's variable):
+  void swap(int *a, int *b) {
+      int t = *a; *a = *b; *b = t;
+  }
+
+const pointer parameter:
+  void f(const int *p);    /* p's target is read-only */
+
+main with command-line args:
+  int main(int argc, char *argv[]) { ... }
+  /* argv[0]=program name, argv[1]..argv[argc-1]=args */
+
+
+────────────────────────────────────────────────────────────────────────────────
+ POINTERS
+────────────────────────────────────────────────────────────────────────────────
+
+Basics:
+  int *p;               /* declare */
+  p = &x;              /* address-of */
+  *p = 42;             /* dereference / write */
+  int v = *p;          /* dereference / read */
+
+Null pointer:
+  int *p = NULL;
+  if (p == NULL) { ... }
+
+Pointer arithmetic (use inside arrays only):
+  p + j        points to a[i+j] if p points to a[i]
+  p++          advance one element
+  (*p)++       increment the pointed-to value
+  *p++         read *p, then advance p
+
+Pointer ↔ array duality:
+  a[i]  ≡  *(a+i)
+  a     ≡  &a[0]
+  p[i]  works if p is a pointer
+
+Pointer to array (walk 2-D rows):
+  int (*p)[6];    /* pointer to a row of 6 ints */
+
+Pointer to pointer:
+  int **pp;       /* to modify a pointer inside a function */
+
+Struct member via pointer:
+  p->member   ≡   (*p).member
+
+Pointer to function:
+  double (*fp)(double);      /* declare */
+  fp = sin;                  /* assign (no parentheses) */
+  y  = (*fp)(x);             /* call */
+  y  = fp(x);                /* also valid */
+
+Array of function pointers:
+  void (*cmds[])(void) = {f1, f2, f3};
+  (*cmds[n])();    /* call n-th */
+
+malloc idiom:
+  p = malloc(sizeof(*p));           /* single object */
+  p = malloc(n * sizeof(*p));       /* array */
+  if (p == NULL) { exit(EXIT_FAILURE); }
+  free(p);  p = NULL;
+
+
+────────────────────────────────────────────────────────────────────────────────
+ STRINGS  <string.h>
+────────────────────────────────────────────────────────────────────────────────
+
+Prototypes:
+  char  *strcpy (char *s1, const char *s2);
+  char  *strncpy(char *s1, const char *s2, size_t n);
+  size_t strlen (const char *s);
+  char  *strcat (char *s1, const char *s2);
+  char  *strncat(char *s1, const char *s2, size_t n);
+  int    strcmp (const char *s1, const char *s2);
+    /* returns <0, 0, or >0 */
+
+Safe-copy / safe-cat idioms:
+  strncpy(dst, src, sizeof(dst));
+  dst[sizeof(dst)-1] = '\0';
+
+  strncat(s1, s2, sizeof(s1) - strlen(s1) - 1);
+
+sprintf  (<stdio.h>):
+  sprintf(buf, "%2d", n);    /* int → string */
+
+String traversal idioms:
+  while (*s)    s++;          /* advance to NUL */
+  while (*s++)  ;             /* advance to NUL (alt) */
+  while (*p++ = *q++)  ;      /* copy string */
+
+Custom read-line (safer than gets/scanf):
+  int read_line(char str[], int n) {
+      int ch, i = 0;
+      while ((ch = getchar()) != '\n')
+          if (i < n) str[i++] = ch;
+      str[i] = '\0';
+      return i;
+  }
+
+
+────────────────────────────────────────────────────────────────────────────────
+ I/O IDIOMS
+────────────────────────────────────────────────────────────────────────────────
+
+Skip whitespace before char:
+  scanf(" %c", &ch);
+
+Read char (returns int, handles EOF):
+  int ch = getchar();
+
+Flush input buffer after scanf:
+  while (getchar() != '\n') ;
+
+Skip leading spaces:
+  while ((ch = getchar()) == ' ') ;
+
+Random integer in [lo, hi]:
+  #include <stdlib.h>
+  #include <time.h>
+  srand((unsigned) time(NULL));
+  x = rand() % (hi - lo + 1) + lo;
+
+
+────────────────────────────────────────────────────────────────────────────────
+ STRUCTS / UNIONS / ENUMS
+────────────────────────────────────────────────────────────────────────────────
+
+Struct tag:
+  struct point { int x, y; };
+  struct point p1;
+  p1.x = 3;  p1.y = 7;
+
+Struct typedef:
+  typedef struct { int x, y; } Point;
+  Point p1;
+
+Struct init:
+  struct point p = {3, 7};
+  struct point p = {.x=3, .y=7};    /* designated */
+
+Post-declaration assignment (compound literal):
+  p = (struct point){3, 7};
+
+Nested struct:
+  struct student {
+      struct person_name name;
+      int id;
+  };
+  strcpy(s.name.first, "Omar");
+
+Array of structs:
+  struct point pts[50];
+  pts[i].x = 0;
+
+Union:
+  union { int i; double d; } u;
+  u.i = 5;    /* only use one member at a time */
+
+Enum:
+  enum suit {CLUBS=1, DIAMONDS, HEARTS, SPADES};
+  typedef enum {RED, GREEN, BLUE} Color;
+  /* unset constant = previous + 1 */
+
+Linked list node:
+  struct node {
+      int value;
+      struct node *next;
+  };
+  struct node *first = NULL;
+
+Add node to front:
+  struct node *add(struct node *list, int n) {
+      struct node *p = malloc(sizeof(*p));
+      if (!p) exit(EXIT_FAILURE);
+      p->value = n;
+      p->next  = list;
+      return p;
+  }
+  first = add(first, 10);
+
+Traverse list:
+  for (p = first; p != NULL; p = p->next)
+      printf("%d\n", p->value);
+
+
+────────────────────────────────────────────────────────────────────────────────
+ MEMORY ALLOCATION  <stdlib.h>
+────────────────────────────────────────────────────────────────────────────────
+
+  void *malloc (size_t size);
+    Allocate size bytes. Contents undefined.
+
+  void *calloc (size_t n, size_t size);
+    Allocate n×size bytes, zero-initialized.
+
+  void *realloc(void *ptr, size_t size);
+    Resize block. May move. Returns NULL on failure.
+
+  void  free   (void *ptr);
+    Release block. ptr must be from malloc/calloc/realloc.
+
+Idioms:
+  p = malloc(sizeof(*p));            /* single object */
+  p = malloc(n * sizeof(*p));        /* array */
+  p = calloc(n, sizeof(*p));         /* zeroed array */
+  p = realloc(p, new_n * sizeof(*p));/* resize */
+
+Always check return, free when done, set to NULL after free.
+
+
+────────────────────────────────────────────────────────────────────────────────
+ PREPROCESSOR
+────────────────────────────────────────────────────────────────────────────────
+
+Object-like macro:
+  #define N   100
+  #define PI  3.14159
+
+Parameterized macro:
+  #define MAX(x,y) ((x)>(y)?(x):(y))
+  #define SQ(x)    ((x)*(x))
+  /* parenthesize everything; no space before ( */
+
+Stringify / Token paste:
+  #define PRINT_INT(n) printf(#n " = %d\n", n)
+  #define MK_ID(n)     i##n       /* produces i1, i2, ... */
+
+#include:
+  #include <stdlib.h>      /* system header */
+  #include "mylib.h"       /* local header  */
+
+Conditional compilation:
+  #ifdef DEBUG
+      ...
+  #endif
+
+  #ifndef HEADER_H
+  #define HEADER_H
+      ...
+  #endif
+
+Multi-line macro:
+  #define LONG_MACRO  \
+      line1;          \
+      line2;
+
+Macros ignore scope — active from definition to end of file.
+
+
+────────────────────────────────────────────────────────────────────────────────
+ STORAGE CLASSES & SCOPE
+────────────────────────────────────────────────────────────────────────────────
+
+  auto (default)     Local var. Automatic duration. Block scope.
+  static (local)     Local var. Retains value across calls.
+  static (global)    File scope only — not visible outside file.
+  extern             Declare a variable defined in another file.
+  register           Hint to keep in CPU register.
+
+Suggested file layout:
+  #include directives
+  #define directives
+  Type definitions (typedef, struct tags)
+  External variable declarations
+  Function prototypes
+  int main(void) { ... }
+  Other function definitions
+
+
+────────────────────────────────────────────────────────────────────────────────
+ ESCAPE SEQUENCES & MISC
+────────────────────────────────────────────────────────────────────────────────
+
+Escape sequences:
+  \n    newline          \t    tab
+  \b    backspace        \a    alert/bell
+  \\    backslash        \'    single quote
+  \"    double quote     \0    null char
+  \033  octal            \x1B  hex
+
+toupper / tolower  (<ctype.h>):
+  char up = toupper(ch);
+  char lo = tolower(ch);
+
+Case-convert idiom (ASCII only):
+  upper = ch - 'a' + 'A';
+
+restrict pointer (C99):
+  int * restrict p;    /* only p may alias this block */
+
+Flexible array member (C99):
+  struct vstring { int len; char chars[]; };
+  s = malloc(sizeof(struct vstring) + n);
+
+================================================================================

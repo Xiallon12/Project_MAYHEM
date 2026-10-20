@@ -1,0 +1,43 @@
+;tmux stands for terminal multiplexer and it is used in managing terminals inside of terminals
+
+;its package is usually tmux
+
+;to open it type: tmux , in the terminal
+
+;the default prefix is ^B
+
+;to detach, meaning to get out of a session without closing it:
+prefix + D
+
+;to reattach to the most recent session type: tmux attach
+
+;tmux can create horizontal and vertical splits, called panes
+
+;to make a vertical split (make a pane on the right):
+prefix + % (by default)
+
+;to make a horizontal split (make a pane downwards):
+prefix + " (by default)
+
+;to exit tmux exit the last terminal open in a session
+
+;to see currently running tmux sessions use:
+tmux list-sessions
+;to exit a pane in tmux is prefix + X + y (by default)
+
+;to create a  new window in tmux:
+tmux new-window
+OR: prefix + C (by default)
+
+;to move between windows:
+prefix + P for previous
+prefix + N for next
+(by default)
+
+;to kill a window:
+prefix + & (by default)
+
+;to rename a window, while on it:
+prefix + , (by default)
+
+;

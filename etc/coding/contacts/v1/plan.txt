@@ -1,0 +1,29 @@
+so what i wanna do is a contacts program that stores contacts in the form:
+name
+number
+and put them in an array where i can find them by name or by number
+contacts should be sorted alphabetically
+
+the program will go on like this:
+a prompt where i can choose:
+1-add a contact
+2-view a contact
+3-delete a contact
+0-exit
+and that's it
+the data structure i'm gonna use is an array of pointers to structs
+where each struct will have two members, name and number
+contacts will be ordered alphabetically with respect to their name
+add contact will prompt for a name and a number, then store that struct within its suitable place in the array
+the algorithm i'm gonna use for sorting is simple
+start from the end of the array, and move each element 1 place towards the end, 
+until we find the suitable place for the contact
+
+i'm gonna split the program into three source files
+1 for main, this is where the prompt happens, and where each prompt is given its meaning
+2 for storage, this is where operations on the array itself will be made
+like the search and insert or search and delete
+3 for contacts, this is where the prompt for the contacts will be made
+along with any data structures related to the contact itself and work on them
+
+

@@ -1,0 +1,13 @@
+{
+  "fileDirections": {
+    "CS/CSAPP/Chapter 1.md": "auto",
+    "CS/CSAPP/Chapter 2.md": "auto",
+    "Fiqh/شرح العمدة للبهاء المقدسي.md": "auto"
+  },
+  "defaultDirection": "auto",
+  "rememberPerFile": true,
+  "setNoteTitleDirection": true,
+  "setYamlDirection": true,
+  "preventRTLFrontmatter": false,
+  "statusBar": true
+}

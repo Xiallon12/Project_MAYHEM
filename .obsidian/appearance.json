@@ -1,0 +1,12 @@
+{
+  "theme": "obsidian",
+  "cssTheme": "Vanilla AMOLED",
+  "showRibbon": true,
+  "nativeMenus": false,
+  "baseFontSize": 30,
+  "baseFontSizeAction": true,
+  "showViewHeader": true,
+  "enabledCssSnippets": [
+    "rtl-indent-fix"
+  ]
+}

@@ -1,0 +1,83 @@
+Chapter 1
+
+;Life cycle of the hello world program:
+
+1-information is bits + context, 
+the program is saved in memory as binary characters
+where binary is 0s and 1s
+each 0 or 1 is one bit
+each 8 bits are grouped together in a byte
+the byte is the smallest memory unit you usually deal with
+files that consist of ascii characters are called text files
+and files of ascii that are code are called source files
+source files are then translated to binary, called "binaries", duh
+
+2-programs after that are converted from a human-readable source file
+into a machine readable binary
+called an executable object
+where this process is performed by a compile driver
+first the program goes through the preprocessor
+where it makes the program ready for compilation
+then through the compiler which transforms it to assembly code
+then the assember which makes it partitioned binaries
+then the linker which puts them all together
+
+3-you should learn how a program is compiled for the following raisons:
+	-optimizing program performance
+	-
+
+
+Chapter 2
+
+;to the computer, programs are just a block of bytes in a
+large array of bytes called the virtual memory
+the computer has no concept of data types
+
+;we usually use hexadecimal notation to represent bytes
+where each byte instead of being 00000000 to 11111111
+or 0 to 255 which is harder to convert to and from
+we simply use 0x00 to 0xff
+
+;for powers of two where x is 2^n
+put n in the form n = i + 4j
+then i indicates the leading number of the hexadecimal
+where 0 = 1, 1 = 2, 2 = 4, and 3 = 8
+and j becomes the number of zeroes
+so x = 2^7, so n = 7
+7 = 4*1 + 3, so j = 1 and i = 3
+so x in hexadecimal becomes 0x80
+its binary however is just 1 followed by n zeroes
+so in binary it's 10000000
+
+;to convert from hexa to decimal you divide by 16,
+and the remainder is the least significant digit going up
+
+;usually, modern processors are little endian
+meaning they express numbers with the least significant bit being the first
+so a 0x1234 would be 34 12
+the internet is the opposite
+
+
+
+Chapter 3
+
+;parts of the processor state are visible in
+assembly code while hidden normally, like:
+1-program counter (PC) known as %rip contains the address
+of the next instruction to be executed
+2-integer register files that are 16 locations storing 64bit values
+they can hold addresses (pointers) or integer data
+they keep track of program state or hold critical data
+3-condition code registers that implement control flow like if and while
+4-vector integers that hold one or more integer or float values
+
+;machine code views memory as a big array
+no data types, even all pointers and integers are the same
+
+;program memory contains:
+executable machine code
+runtime stack for managing calls and returns
+blocks of memory allocated by the user
+some information required by the os
+
+;

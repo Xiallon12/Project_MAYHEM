@@ -1,0 +1,1551 @@
+;ANSI C in 1989, known as C89.
+
+;ISO C90 in 1990.
+
+;A C program is written as follows
+	#include <stdio.h>
+	int main(void)
+	{
+		#code;
+		#    ;
+		#    ;
+		return 0;
+	}
+
+;compiling code is 4 steps:
+	1 preprocessing
+	2 compiling
+	3 assembling
+	4 linking
+
+;to compile a C file do gcc file.c -o file (or just use cc).
+where cc is like the default compiler of the os
+
+;directives are written with a # in front of them.
+
+;functions return values.
+
+;printf prints a string literal
+
+;string literals are characters between double quotes ""
+
+;"Brevity is the soul of wit", brevity as in brief
+
+;comments either start with // or encapsulated between /* */
+you can't nest the latter
+
+;types are the ways data are stored
+
+;you declare a variable by writing its type then its name
+like: int x;
+
+;in general declarations should come before statements
+that was the norm, even mandatory until C99
+
+;assingment is giving a variable its value, like int hi = 5;
+
+;scanf reads user input through this syntax
+scanf("%d", &x) where d is the identifier for integers and x is an integer variable
+so you pass it the identifier and a pointer to the variable
+
+;you make constants using the directive #define Hello "hello"
+where Hello is the name of the constant and "hello" is its value
+
+;names of things in C start with a letter or _ and are case sensitive
+names of things are called identifiers, officially
+
+;'words' in C, as in every single thing in the code line, are called tokens
+
+;space between tokens doesn't matter, so is the case with blank lines and indentation, they're all called white space
+
+;options of gcc:
+	-Wall all warnings
+	-W most warnings
+	-pedantic necessary warnings
+	-ansi for the standard
+	-std=c89
+	-std=c99
+
+;the preprocessor removes comments and puts a single space
+
+;floats require an f at the end like 1.0f
+
+;"Most compilers and linkers are more generous than the standard, so these rules
+aren’t a problem in practice. Don’t worry about making identifiers too long—
+worry about making them too short."
+a quote about the length of variable and funciton names
+
+;conversion specifications are usually in the form %(-)m.pX where m and p are integers and X is a letter
+m is universal, while p is letter specific
+they're both optional and the . is for p
+m is the minimum field width
+so when printing "123" with m of 4 it prints " 123", adds a space upfront
+-m adds a space in the end
+precision p is X-specific
+	d it is like m, minimum digits to display, but it adds zeroes not spaces
+	f it is the minimum decimal digits displayed default 6, if set to 0 no decimals displayed, and it adds zeroes like d
+	e is like f with the exponential notation
+	g is like f and e but smart, doesn't show zeroes, automatically removes decimal, can alternate between f and e
+
+;escape sequences:
+	\n newline
+	\a alert, bell sound
+	\b backspace
+	\t horizontal tab
+
+;scanf is a pattern matching function
+conversions are matched against the user input, it reads as long as the input is of the type of the conversion
+once a character from another type appears it is skipped, and the scanning terminates
+white spaces (spaces, tabs, new lines) are skipped unless a white space is in the corresponding place in the string literal
+when the scanning terminates the remaining characters in the buffer are for the next scanf to read.
+and of course, this has absolute potential to fuck you up.
+
+;all operators in C are expressions not statements, aka they have return value
+which means x = 5 is an expressions that equals 5, which might come in handy someway
+
+;types of expressions in C (so far):
+unary: plus and minus for positive and negative.
+binary: basic arithmetic operators. additive ones like + and -, and multiplicative ones like *, /, and %.
+
+;when both operands of / are integers it removes the decimal part.
+
+;the % requires both operands to be integers.
+
+;zero can't be the right operand for / or %.
+
+;in C89, / and % are implementation dependent, while in C99 it's standardized according to conventional maths.
+
+;operator precedence is the same as in maths. exceptions will be cited.
+
+;binary operators are left associative and unary are right associative.
+
+;lvalues are values that should be written on the left hand side, aka variables, so not constants, literals, or expressions.
+
+;some operators require lvalues on the lhs like assignment operator, you can't say 12 = x but you can say y = x or y = 12.
+
+;compound assignment is doing an operation then assignment using one compound operator consisting of that operation's operator and the =
+like += and -=, and *=, /=, and %=, etc..
+
+;increments and decrements are ++ and --, where expressions x++ returns x then increments, while ++x increments then returns x.
+
+;increments and decrements come first in priority before all other arithmetic operators, and they're left associative
+
+;assigments and inc/decrement are the only operators that modify values of variables
+
+;in C, all expressions can be made as statements.
+
+;rvalues are expressions, aka anything with a return value, including constants and so forth.
+
+;the modulus tries to get the value that makes (a/b)(b) + a%b equal to a by changing a%b
+so if it were -5 and 3 for example
+-5/3 would be -1 if it's rounded up
+times b is -3
+then to become -5 we need -2
+while if it were rounded down aka -2
+then multiplied by b which would be -6
+we'd need a 1 to make it to -5
+so that's where the confusion comes from in c89, because the standard doesn't specify if the value would be rounded up or down
+but in c99 it's standardized to get nearer to zero, so the confusion is mostly solved.
+
+;C has relatively few statements, some of which are return and expressions, and most of them fall into three categories,
+Selection: like if and switch statements.
+Iteration: like while, do and for
+Jump: like break, return, and goto
+also there are compound statements that combines multiple statements, and null statements that do nothing.
+
+;other operators in C are:
+relational: <= >= < >
+equality: == !=
+logical: || && ^ !
+conditional: ?:
+
+;don't confuse the equality operator == with the assignment operator =
+
+;precedence of relational operators is less than arithmetic and they're left associative
+
+;precedence of equality operators is lower than relational, and they're left associative
+
+;precendence of logical operators && and || is lower than equality operators and they're left associative
+precedence of ! is equal to unary operators
+
+;&& and || are short-circuits, meaning they perform left operation first before right, and if the left determines the result then
+the right expression won't be evaluated.
+
+;if (expression) {statements} (the {} are optional in one-liners)
+
+;if statements may have an else clause, that takes place when if's conditions aren't met
+
+;there's no else if statement natively in C, instead it's a cascading if statement, where it's an if nested inside the else of the main if
+keep in mind that the else and if in the cascading else if aren't one thing, they're completely separate in theory
+it looks like this:
+if ...
+else if...
+else
+
+;the dangling else is when you nest an if inside an if then you put an else at the end so that
+it might appear it belongs to the first yet that's not true
+something like this:
+if...
+    if...
+else...
+the else might look like it belongs to the first due to indentation yet it definitely belongs to the second, since indentation doesn't really matter in C.
+the solution to this is to systemically put curly braces to make code clearer, like this:
+if...
+    {if...}
+else...
+
+;conditional expressions, ternary operator:
+condition?true:else;
+
+;in C89, they had to define TRUE and FALSE as 1 and 0 or even typedef BOOL as an unsigned int,
+but in C99 there's a _Bool type and in <stdbool.h> there's a bool type that's just bool, which is a macro for _Bool
+
+;switch statements:
+switch (variable) {
+	case num: ...
+		  break;
+	default:  ...
+		  break;
+}
+
+;what's after the case has to be a constant value expression, aka a number, a character or a macro
+
+;you can't duplicate cases in switch statements, but you can remove the break and stack cases together. pn 87
+
+;in general, a switch statement start at the first working case and will continue until the code ends or it sees a break.
+
+;C has 3 main loops: while, for, and do.
+
+;while is the simplest as in:
+while (condition) expression
+
+;while simply checks if it's condition is true, and if it is, the loop goes on.\
+
+;while can enter an infinite loop by the idion while (1) and it can terminate with jump statements like goto or break
+
+;do while loop is written as:
+do expression while (condition);
+
+;do while loop simply executes the expression once before it goes into the loop.
+
+;for loops are written like this:
+for (declaration; condition; post-expression) expression
+
+;for loop is equivalent to a while loop written like:
+declaration;
+while (condition)
+expression;
+post-expression;
+
+;some for loop idioms:
+ Counting up from 0 to n–1:
+for (i = 0; i < n; i++) …
+ Counting up from 1 to n:
+for (i = 1; i <= n; i++) …
+ Counting down from n–1 to 0:
+for (i = n - 1; i >= 0; i--) …
+ Counting down from n to 1:
+for (i = n; i > 0; i--) …
+
+;you can omit expressions from the for parentheses:
+removing the declaration assumes you've already declared the variable
+removing the post assumes you'll deal with it manually in the loop
+removing the condition makes it infinite, as it defaults to true
+
+;some programmers prefer using for (;;) for the infinite loop
+
+;variables declared within a loop (or any curly braces in general) will only be used inside the
+scope of those curly braces and won't affect its value elsewhere.
+
+;the comma operator (,) is an operator that evaluates any number of operators separated by a
+comma where it executes all expressions from left to right discarding their values then returns the value of the last expression
+its precedence is less than all other operators, and it is left associative.
+
+;the break statement provides an exit point to a loop anywhere inside it
+that makes it easier, sometimes even the more convenient option, to deal with infinite loops
+
+;in nested loops or switches, the break breaks only the loop/switch it's directly in. to break multiple use goto.
+
+;continue transfers control right before the end of the loop in opposition to break that does so right after the end of the loop
+continue skips the rest of the current iteration of the loop
+
+;goto simply goes to a label and starts from there.
+a label is just:
+label: statement
+you can put multiple labels on a single statement
+goto is like:
+goto label;
+
+;you can put a label at the end of nested loops and switches in order to goto there when you need to end all of them
+
+;null statements are simply empty code blocks usually used to make for loops with empty bodies where their
+objective is usually just changing the value of the variable.
+
+
+;C supports two different kinds of numeric data types: integers and floats.
+integers have two types: signed and unsigned.
+
+;signed integers have their leftmost byte be a signed byte, aka it determines whether the number is positive or negative
+hence the range of signed integers is have that of unsigned but they have negative, since negative signed ints are just
+bigger unsigned ints that are comprehended in a different way by the computer
+
+;integers are typically 32 bits aka 4 bytes, however there are long and short which are 8 and 2 bytes repectively
+
+;you can combine the modifiers int, long, and short with signed and unsigned however you want (you can't put short and long or
+signed and unsigned at the same time tho)
+
+;the default mode is signed unless made otherwise
+
+;C99 adds two new int types, long long and unsigned long long which take 8 bytes on 64-bit machines
+
+;char and bool are considered unsigned ints
+
+;in C, you write in decimal by default but you can write in octal by starting the numer with 0 or in hexa by
+starting it with a 0x or 0X, and hexadecimal letters can be capital or small
+
+;all integers are stored in binary regardless of what way they're written in
+
+;to force a number to be dealt with as a long end it with L (or l) like 69L
+and to force it as unsigned end it with U (or u) like 69U
+they can be combined, case and order don't matter
+you can even use LL for long long
+
+;there can happen an integer overflow if the number you try to store in them is bigger than the 
+capacity of the data type, and when that happens to a type of n bits the result will be:
+expectedValue % 2^n, so if you add two to the max value of an int which is generally 2^n-1 the result will be a 1
+of course for signed values there can be an overflow from positive to negative as well
+
+;if an overflow occurs, do consider changing the data type but make sure to change other things related to it like
+scanf and printf modifiers
+
+;to make an int be treated as a short, long, or unsigned in scanf and printf use h, l, and u respectively
+
+;when reading unsigned integers, you use u, o, and x instead of d, where u is in decimal form, o is in octal, and x is in hexa.
+
+;floats are divided based on both size and floating point precision into floats, doubles, and long doubles
+modern floats follow the IEEE standard 754 also known as IEC 60559
+IEEE is the Institue of Electrical and Electronics Engineers
+
+;floats have a precision of 6 digits after the decimal point while doubles have 15
+
+;you can add an e or E at the end of float numbers and it stands for the exponent of 10
+so 15e2 is equivalent to 15*10^2
+
+;the default mode for floats is double, to make them floats you add f or F, to make them long double you add l or L
+
+;as we said before, floats have the modifiers e, f, and g for printf and scanf
+
+;ASCII  or American Standard Code for Information Interchange, is a standard that has mainly 128 letters in a 7 bit format which
+was extended to 256 or what's known as Latin-1
+
+;char is an unsigned int than can store ascii values, aka letters and symbols
+
+;an idiom to convert from capital to small or vice versa is to use letter-'a' + 'A', this converts from small to capital and 
+can be reversed
+that however assumes that in the character set currently used by the computer running the program all small letters and capitals are consecutive
+
+;it's better not to assume that char is signed or unsigned, if it matters just specify it.
+
+;in addition to normal escape sequences, you can use escape sequences on number to represent different numerical types
+octal uses / and doesn't need a 0 like /33 while hexa uses /x and it needs to be a small x like /x34, hexa letters however can be capital or small
+
+;another better way to convert to upper is to use the function toupper(x) where it turns char x into uppercase
+
+;the modifier of chars in scanf and printf is c
+
+;scanf doesn't skip white spaces before a char unless you make it so by putting a space before it like:
+scanf(" %c", &c);
+
+;another way to read chars is getchar() where it reads a char as an input and stores it in an int variable
+
+;two idioms worth mentioning are:
+while (getchar() != '\n') ;
+and
+while ((ch == getchar()) == ' ');
+the first one takes input and doesn't store it, the second one skips white spaces
+
+;be careful when using scanf and getchar in the same program since scanf tends to leave behind the values it didn't
+read to the next input reading function including getchar even the newline which will cause problems
+
+;implicit conversions are those that happen automatically by the C compiler
+explicit conversions are those that hapen by command of the programmer
+
+;implicit conversion happens in those scenarios:
+different type arithmetic >> usual arithmetic conversions
+assigned value different from variable
+argument different from parameter
+return different from function
+
+;the general strategy behind conversions is to make both operands of the narrowest suitable type
+narrowest being stored in least bytes
+
+;most common conversion is promotion, where shorts and chars are converted to int or uint
+
+;for float types, their hierarchy is float then double then long double
+for integral types, it's bool then char then short then int then long then long long, unsigned come after sign in general
+
+;when there's an operation between two operands one of which is unsigned, both operands are converted to unsigned
+
+;when the assigned value is different from the variable C simply converts the value to the type of the variable if possible
+
+;As in C89, the C99 rules for performing the usual arithmetic conversions can
+be divided into two cases:
+1-The type of either operand is a floating type. As long as neither operand has a
+complex type, the rules are the same as before.
+2-Neither operand type is a floating type. First perform integer promotion on
+both operands. If the types of the two operands are now the same, the process
+ends. Otherwise, use the following rules, stopping at the first one that applies:
+● If both operands have signed types or both have unsigned types, convert the
+operand whose type has lesser integer conversion rank to the type of the
+operand with greater rank.
+● If the unsigned operand has rank greater or equal to the rank of the type of
+the signed operand, convert the signed operand to the type of the unsigned
+operand.
+● If the type of the signed operand can represent all of the values of the type
+of the unsigned operand, convert the unsigned operand to the type of the
+signed operand.
+● Otherwise, convert both operands to the unsigned type corresponding to the
+type of the signed operand.
+Incidentally, all arithmetic types can be converted to _Bool type. The result
+of the conversion is 0 if the original value is 0; otherwise, the result is 1.
+
+;casting or explicit conversion in C is made by:
+(type) value
+so you put the type in parentheses before the value
+
+;before we used the macro #define BOOL int to make the bool type in C89
+now there is typedef
+typedef oldtype Newtype
+where it's a convention to make Newtype capitalized
+
+;there are types made by C like:
+long int ptrdiff_t
+unsigned long int size_t
+int wchar_t
+
+;in C99 there is a stdint.h that defines ints with specific numbers of bits like
+int32_t which is an int with 32 bits
+
+;sizeof is an operator that gives the size of a value in size_t
+it is unary, so has precedence more than binary operators, so it's better to always
+use parenthese after it
+
+;printf can read floats and doubles with %f, but scanf needs %lf for doubles
+because scanf deals with pointers, so you have to tell it it's a double pointer to
+store the right number of bytes in the variable
+
+;C has scalar data types, those which store a single value
+and aggregate data types, those which can store multiple, like structs and arrays
+
+;the main way to declare arrays is to declare their type and number of elements
+type name[number];
+
+;it is better to use a macro to define array lengths since it must be a constant value aka no variables
+
+;to access a particular element of an array you can just name[index];
+which is called subscripting
+
+;idiom
+for (i = 0; i < N; i++)
+a[i] = 0;
+/* clears a */
+
+;idiom
+for (i = 0; i < N; i++)
+scanf("%d", &a[i]);
+/* reads data into a */
+
+;idiom
+for (i = 0; i < N; i++)
+sum += a[i];
+/* sums the elements of a */
+
+;arrays are indexed from 0 to n-1, n being the number of elements
+
+;an array subscript can be an integer expression and can have side effects
+
+;remember to not retrieve the value of the variable and change its value in the same expression
+
+;when initializing an array, it's like this:
+int a[10] = {1, 2, 3, ..., 10};
+
+;the initializer can't be empty
+if you put less values than the array, the remaining values become all zeroes
+so an idiom is to do:
+int a[10] = {0}; to make a function of all zeroes
+the initializer can't be more than the array
+if an initializer is present, the length can be omitted, then the
+length of the array becomes that of the initializer
+
+;in C99 you can use designated initializers which are like this:
+int a[10] = {[2] = 3, [8] = 15, [7] = 999};
+this initializes a chosen few elements and zeroes the rest
+the order of the designators doesn't matter
+designators must be constant values
+
+;if the length of the array is not specified, designators can be any
+non negative value, and the length of the array will be the largest one
+
+;you can mix normal initializers with designators like:
+int c[10] = {5, 1, 9, [4] = 3, 7, 2, [8] = 6};
+where 5, 1, and 9 are 0, 1, and 2
+3 is at index 4, then 7 and 2 are at 5 and 6
+then 6 is at index 8
+the rest will be zeroes
+
+;to declare multidimensional arrays, like this:
+int a[10][15];
+where 10 is the number of rows (horizontal) and 15 is the number of columns (vertical)
+although rows and columns here are not really accurate, it's 10 rows of 15 elements stored next to each other,
+not above each other
+
+;remember that a[i,j] uses the comma operator which will result in just a[j]
+
+;for loops go well with arrays
+nested for loops go well with multidimensional arrays
+
+;a better version of md arrays are arrays of pointers, we'll talk about them later
+
+;you can initialize an md array by nesting initializers like { {1,2,3}, {4,5,7,8} }
+of course the rules of initialization apply
+and you can ommit inner braces, then the compiler will take values till they fill a row then go on to the next
+that's obviously not recommended though
+
+;you can declare variables, including arrays, to be constants
+this makes it so that you can't reassign values to them or change them
+like this:
+const int i = 5;
+const int a[5] = {1,2,3,4,5};
+
+;to make randomness in C, you do the following:
+1- include time.h and stdlib.h
+2- pass time from time.h to srand from the standard library
+this makes a new seed of randomness, like shuffling a deck
+3- use rand from the standard library to deal an apparently random number each time
+like this:
+srand((unsigned) time(NULL));
+x = (rand() % (upperLim - lowerLim + 1)) + lowerLim;
+this makes sure the random number is a positive integer between upperLim and lowerLim
+
+;variable length arrays or vlas were first introduced in C99 where they can take a variable as their length
+making them flexible in what you can do with them as now they can be easily manipulated according to end user input
+you just make them like:
+int n, a[n];
+
+;vlas can't have static storage duration, which is something yet to be studied
+they also can't be initialized
+they can be multidimensional
+
+;an idiom to make a subscript of a function by a letter instead of a number is to use:
+a[ch-'a'] or a[ch-'A'], where ch is a small or capital letter depending on the a
+this makes you able to use a letter to access its corresponding index in the array, the letter a would be index 0
+this is helpful if you wanna capitalize letters for example so you pass a word into a function then it iterates over letters
+and capitalizes each letter
+
+;It seems like a designated initializer could end up initializing an array element
+more than once. Consider the following array declaration:
+int a[] = {4, 9, 1, 8, [0] = 5, 7};
+Is this declaration legal, and if so, what is the length of the array? [p. 166]
+Yes, the declaration is legal.
+The net effect is the same as if we had written
+int a[] = {5, 7, 1, 8};
+Thus, the length of this array is four.
+
+;an idiom to copy arrays is to use:
+for (i = 0; i < N; i++)
+	a[i] = b[i];
+or:
+memcpy(a, b, sizeof(a));
+where memcpy is a function in string.h that copies bytes from a place in memory to another
+its first two arguments are pointers and the third is the number of bytes to be moved
+
+;functions are ways to organize code and make it modular. their syntax is like:
+return-type function-name ( parameters )
+{
+declarations
+statements
+}
+
+;void is a type with no value, so it is used in functions with no return
+
+;opposing to C89, in C99 it's illegal to write a function without a return type
+it's also illegal to return arrays
+
+;it's convenient to put the return type above the function name if the return type is lengthy
+
+;variables declared in a function are exclusive to that function, no other function can access them
+
+;the body of a function can be empty
+
+;void functions should always be used as statements since they have no return value,
+while other functions can be stored in variables
+
+;printf actually returns the number of characters printed
+
+;a way to show you deliberately discarded the return value of a function is conventional to
+cast it to void like (void) printf();
+
+;C doesn't require that function declarations be above main, you can still call them, but the compiler
+has no way of knowing whether you gave it the right arguments, so it's a good practice to put a 
+prototype or a function declaration before main just including its name, parameter and return type lik:
+returnType functionName (parameters);
+this makes the compiler able to see whether you fucked up in a function call
+in C99, prototypes are mandatory, at least extremely recommended.
+
+;parameters are the variable declarations in the parentheses of a function declaration
+in a prototype, you need a type only for each parameter, tho adding a name increases readability
+
+;arguments are passed to the function by value, meaning that functions deal with only copies of variables given to them
+they do not modify the variable itself, unless you use pointers
+
+;arguments are implicitly converted to the type of the parameter
+if there was no decalaration of the function prior to calling it, integer and float conversions take place
+
+;you can add array parameters to functions, even without defining their length
+tho C doesn't have an explicit way of figuring out array lengths, you'll have to do it yourself
+an idiom for that is:
+sizeof(a)/sizeof(a[0])
+you can't use that on parameters tho, it won't be correct, we'll know the reason soon
+for now, just get the length yourself
+
+;don't put brackets after an array name when passing it to a function
+passing arrays like that treats them like pointers
+so you actually can modify the actual values of arrays right off the bat, opposite to other variables
+do put brackets after them in parameters tho
+
+;when making two dimensional array parameters, you have to specify the number of columns
+you can instead use an array of pointers
+
+;you can use a vla parameter, like a[n]
+tho in that case, make sure n is declared before the array
+you can also just use an *
+
+;the main use of vla parameters is to use a variable number of columns
+
+;the word static can be used in array parameters like: a[static 4] to indicate
+that the length of the array is at least 4, tho it has no actual value
+in multidimensional arrays, static can be used in the first only
+
+;you can create arrays on the fly (useful in arguments) by: (int []) {1,2,3}
+aka like type casting
+this is called a compound literal and it is an lvalue
+it can be made read only by casting it to const like const int
+
+;to sum up functions:
+it's illegal to declare a function without a return type
+in parameters, you need only a type, you should add a name
+you should add the type before every single variable
+you can add arrays, with or without initial length
+but in multidimensional arrays you can only leave the length of
+the first dimension blank
+unless you make them vlas
+you add brackets after the array declaration
+in arguments, you pass variables by value to the function
+you can create variables inside the call
+you don't need a prototype before the call, but it's necessary
+you pass arrays without brackets
+
+;return statements exit void functions and return values in typed functions
+returning means the function call becomes like a variable with the value of the return
+expressions after return are evaluated before it
+if their type doesn't match the return type of the function then the
+returned value is implicitly converted
+
+;when trying to access the value of a function that exited without a return value
+the result is undefined
+
+;the main function generally returns 0 if the program worked correctly and 
+nonzero if a crash happened, as in some os you can test for the value of main
+
+;another way to exit a program other than performing a return in main is exit(n)
+it exits the program and returns the value n
+it's in stdlib.h
+it has two macros EXIT_SUCCESS and EXIT_FAILURE that are 0 and 1 respectively
+
+;recursion is that a function calls itself.
+these calls pile up until they reach the main case where they unfold, one by one.
+
+;Quicksort algorithm uses divide and conquer.
+it's about choosing a point in the array, putting all values larger than it to its right
+and putting all values smaller than it to its left
+then doing the same with each segment, the one to the right and the one to the left of the point
+
+;a way to implement quicksort is this:
+make two arrows, high and low
+high starts pointing at last element and low and first
+store the element at low and make a hole in its place
+the arrow not pointing to a hole, high, moves towards the array center
+it moves through the elements until it sees an element higher than the one stored
+it puts that number in the hole, moves low 1 step forward
+and makes a hole in place of high
+now the arrow not pointing to a hole, 
+low starts moving until it finds an element lower than the one stored
+then it puts the element at low in the hole, moves high forward
+and high starts moving
+until low and high point towards the same hole at the end
+there you put the stored number
+
+;Robert Sedgewick’s Algorithms in C, Parts 1–4: Fundamentals, Data Structures,
+Sorting, Searching, Third Edition (Boston, Mass.: Addison-Wesley, 1998).
+
+;a variable defind within a function or a block is local to that function or block
+that is called block scope
+
+;a variable does not retain its value when its enclosing function returns
+that is called automatic storage duration
+
+;using the word static before variable declaration like 
+static int x;
+makes x's value retained, aka x does not lose its value when the function returns
+
+;parameters are the same as variables except they're usually automatically initialized to
+the value of the corresponding argument
+
+;external variables are variables made outside any function or block
+
+;external variables have static storage durations
+they retain their values throughout program duration
+
+;external variables have file scope
+meaning they are local to the whole file they're in
+
+;a stack is a data structure that store multiple data of the same type
+you can either push to it, add to the end of the stack
+or pop from it, remove from the end of the stack
+
+;a way to implement stacks in C is to make an array contents[] and an int top
+top is initially 0 when the array is empty
+when you push to the array increment top
+when you pop from it decrement top
+
+;don't use external variables too much
+
+;a block is a collection of statements and declarations inside curly braces {}
+variables within it by default have automatic storage duration unless declared static
+and block scope, meaning the same name can be used elsewhere outside the block
+
+;a possible ordering to organize a C file:
+#include directives
+#define directives
+Type definitions
+Declarations of external variables
+Prototypes for functions other than main
+Definition of main
+Definitions of other functions
+
+;programs consist of two things, code which is assembly operations corresponding to C code,
+and data, corresponding to the variables.
+data is stored in bytes, which are 8-bit blocks
+they're addressed in the memory from 0 to N-1
+the address of a variable is the address of the first byte in it
+an address can be stored in a pointer, which is a special type of integer
+
+;pointers can be declared like:
+int *number = &digit;
+where now number is a variable of type pointer that points to an int digit
+meaning it stores the address of digit in memory
+& is called the address operator
+
+;if we have a pointer p and we pass p to a function it is 
+passed the the address stored in p
+while if we pass *p it's passed the value the address is pointing to
+this is called the indirection operator
+
+;both the address operator and the indirection operator are unary
+and have right association
+
+;as a solution to the problem of passing variables by value to functions disallowing
+you to change them directly, you can instead pass them pointers allowing you to
+pass variables by address making the pointer an alias or indirect copy of the variable
+through the indirection operator
+
+;remember btw that arrays are passed without their [] in calls and written with them in parameters
+pointers also have similar confusion, you write their * in parameters not in calls
+unless you're not passing the pointer variable you're passing the value variable you use & to
+pass its address
+
+;you can use const before a pointer parameter to indicate the function won't change its value
+by its I mean the value being pointed at by the pointer. so if we say int *p = &t
+then we pass p to a function as a const pointer, we expect t won't change
+if attempted to change it's a compilation error
+
+;functions can return pointers
+
+;never return pointers to automatic variables
+
+;pointer arithmetic is performing arithmetic operations on pointers, specifically addition and subtraction
+it's usually done on pointers pointing to elements of arrays
+where if p points to element a[i] of array a then p + j where j is an integer points to a[i+j] if it exists
+if it doesn't exist the result is undefined, that's why it's
+not advised to use pointer arithmetic outside of arrays
+
+;the ++ operator takes precedence over the * operator, so *p++ is like *(p++) which
+returns p then increments it, so incrementing the value p is pointing at is through:
+(*p)++ where we'd have to use parentheses
+
+;the array variable without the brackets is considered a pointer to the first element of the array
+so a[0] is equivalent to *a and a[i] is equivalent to *(a+i)
+
+;you could also use normal pointers as an array name, you can do:
+int *p = &a; p[0] = 5; you could even do 0[p] = 5;
+
+;as we've said before, a pointer stores two things, the type of the value it's pointing at
+and the number of bytes that value should take
+so when you make a pointer int (*p) [6] for example, this creates a pointer to an
+array using typecasting where the pointer is pointing at the first element of an array of 6 elements
+so if we create a 2 dimensional array of i rows and 6 columns, we can use pointer p to walk over 
+entire columns in the array and and subscript p to go to specific elements
+you have to use parentheses in (*p) [6] cuz *p[6] is *(p[6]) which is an array of 6 pointers
+not a pointer to an array
+
+;you should probably make your own input functions because scanf and gets are
+unsafe and too flexible with very specific constraints
+this is an example of an input function that doesn't skip white space and ends
+at a new line character:
+int read_line(char str[], int n)
+{
+int ch, i = 0;
+while ((ch = getchar()) != '\n')
+if (i < n)
+str[i++] = ch;
+str[i] = '\0';
+ /* terminates string */
+return i;
+ /* number of characters stored */
+}
+
+;some functions of the standard string library <string.h> in C:
+1- strcpy:
+char *strcpy(char *s1, const char *s2);
+it copies s2 into s1, precisely the string pointed at by s2 to the array pointed at by s1
+it returns s1, the new string
+strcpy is unsafe in that it can't check if s2 can fit into s1 or not
+so if s1 is n elements and s2 has more than n-1 characters undefined behaviour occurs
+
+2- strncpy:
+strncpy(str1, str2, sizeof(str1));
+is a safer version of strcpy as it allows you to limit the number of elements copied
+
+3- strlen:
+size_t strlen(const char *s);
+is a function that returns the number of characters of a string (without the null)
+it includes white space
+size_t is an unsigned integer
+
+4- strcat:
+char *strcat(char *s1, const char *s2);
+strcat appends the contents of string s2 to the end of string s1
+it returns s1
+like strcpy, it's unsafe as it can't know if s2 can fit into s1 or noh
+
+5- strncat:
+strncat(str1, str2, sizeof(str1) - strlen(str1) - 1);
+is a safer version of strcat that can be given the number of characters to be catted
+
+6- strcmp:
+int strcmp(const char *s1, const char *s2);
+it returns a number greater than, less than, or equal to 0
+the number is less than 0 if the first i characters are the same but then
+they're different in the (i+1) character, those two characters are compared based on
+the character set, in ASCII smol>capital>number>space and z>a and numbers are 0 to 9 where 9>0
+it compares s1 to s2 so if s1 is capital and s2 is smol the return is negative
+it's also less than zero if s1 is shorter than s2
+returns 0 if completely equal
+
+;sprintf is a function is <stdio.h> that is like: sprintf(day_str, "%2d", day);
+where it takes the formatting "%2d" with the double day as d and assign it to day_str
+so it's a way to store variables in strings rather than print them like printf
+
+;idiom:
+while (*s)
+    s++;
+and idiom:
+while (*s++)
+    ;
+are for finding the null at the end of a string
+
+;idiom:
+while (*p++ = *s2++)
+    ;
+is used to copy strings
+
+;there are two parameters to the main function which are int argc and char *argv[]
+where argc is the number of command line arguments when launching the program
+while argv is an array containing each argument where argv[0] is the program name
+
+;the names argc and argv are a convention not a requirement
+
+;the preprocessor is a program that modifies the C source code before being sent to the compiler
+it turns comments to a single space and executes directives
+some derictives are:
+#define which defines a macro and #undef which removes a macro definition
+#include which includes a file
+#if, #ifdef, #ifndef, #elif, #else, #endif are all if statement directives
+ifdef checks if a macro of a specific name is defined while
+ifndef checks if it's NOT defined
+some other directives are #error, #line, and #pragma
+
+;Directives always end at the first new-line character, unless explicitly con-
+tinued. To continue a directive to the next line, we must end the current line
+with a \ character. For example, the following directive defines a macro that
+represents the capacity of a hard disk, measured in bytes:
+#define DISK_CAPACITY (SIDES * \
+TRACKS_PER_SIDE * \
+SECTORS_PER_TRACK * \
+BYTES_PER_SECTOR)
+
+;simple form of macros is:
+#define indentifier replacement-list
+like: #define N 100
+so each occurrence of N as a token will be replaced with 100
+if you add other characters they will be added as well
+so if it's #define N 100;
+each occurrence of N will instead be replaced by 100;
+
+;you can even use macros to modify C syntax like:
+#define BEGIN {
+#define END }
+this  might help some people as it's a familiar syntax in some older programming languages
+
+;there is something called the parameterized macro that is like:
+#define name(para, para, para...) replacement-list
+where you can replace the name with a replacement list and uses the parameters as variables
+in the replist where you can give arguments to modify them like:
+#define MAX(x,y) ((x > y)?(x):(y))
+
+;in macros try to put as many parentheses as possible without being too much
+and make sure the left parentheses of parameterized macros is adjacent to the name
+without space between them
+
+;usually macros are faster than functions, and macros have no type, so can work with any type
+they however aren't type checked and can be verbose
+you can't have a pointer to a macro
+a macro could evaluate its contents more than once making it potentially slower
+
+;the modifier # turns an argument into a string like:
+#define PRINT_INT(n) printf(#n " = %d\n", n)
+PRINT_INT(i/j);
+printf("i/j" " = %d\n", i/j);
+
+;the modifier ## pastes two tokens together in a signle string like:
+#define MK_ID(n) i##n
+int MK_ID(1), MK_ID(2), MK_ID(3);
+int i1, i2, i3;
+
+;macros don't obey scope rules, they always take effect till the end of the file
+
+;review "Creating Longer Macros" section pn 328
+
+;most of chapter 14 skipped for now.
+will return to it later.
+
+;a program usually consists of multiple files working together
+these code files are called source code
+they usually have the extension .c
+
+;header files are files that are spawned using #include directive
+they usually contain function declaration that would be used by multiple files
+they usually have the extention .h
+
+;the #include directive can either be written as:
+#include <header> if header is from the C library
+or:
+#include "header" for all other ones
+or:
+#include tokens where tokens can be macros, allowing flexibility
+
+;you should put function prototypes in file foo.c in a
+header file conventionally called foo.h so that
+you can just include it in any other files the program
+has then you can use these functions freely
+
+;defining a variable is putting aside space suitable for it
+while declaring it is declaring its name so it can be used in a file
+
+;to use a variable in multiple files you can define it in a file (by declaring it there)
+then you declare it in other files with the keyword extern like:
+(in foo.c) int i;
+(in boo.c) extern int i;
+
+;to compile a program made of multiple files you use:
+gcc -o output_name file1.c file2.c file3.c ...
+
+;to make compiling multiple-file programs easier we use makefiles
+you should study how to write makefiles after finishing this book
+
+;to properly compile a program that includes the <math.h> headerfile
+you should use the option -lm
+
+;you can change the value of a macro through the command line on compiling
+by using the option -D like: gcc -DDEBUG=1 hi.c
+not specifying the value will make it to 1
+you could also use -U to undefine a macro
+
+;arrays as a data structure: all elements have same type, elements are ordered.
+
+;remember that you lost chapter 13 notes, redo them if you still haven't done so.
+
+;a structure in C is a data structure that has elements called members
+they can have different types
+they have names, so to select an element you need its name not its position
+in other words its unordered
+
+;the standard way to declare structs is:
+struct {int number;
+	char name[NAME_LEN+1];
+	int phone;
+	} person1, person2;
+where person1 and member2 will be of that struct's type.
+struct members are stored in the order they were written as
+so this struct will be: number(32bits) - name(...) - phone(32bits)
+
+;structs have different namespaces, you can have the same variable name in two structs.
+
+;you can initialize struct members using curly braces like:
+struct {int number;
+	char name[NAME_LEN+1];
+	int phone;
+	} person1 = {1, "Omar", 2123}
+	, person2 = {2, "Potato", 6789};
+the values must be in the same order of the struct.
+
+;struct values can't be variables, and can only be constant expressions, for now..
+
+;you could also use a designated initializer like this:
+{.phone = 107, .name = "Tomato", .number = 3}
+where order doesn't matter
+this combination of a period and a member name is called a designator
+if we use for example
+{.phone = 107, .name = "Tomato", 567}
+notice that the last variable wasn't named
+the compiler treats it as the variable right after name in this case
+and sets uninitialized variables to 0
+
+;struct members are lvalues and can be used for assignment or modification like:
+person1.name = "Xiallon";
+person2.number = 89;
+
+;we can copy the contents of a struct into another like:
+person2 = person1; where now person2 has the contents of person1
+this means person2.name will have the same value as person1.name and so on
+of course this can only be used on structs of the same type
+we can't use other operations on whole structs, like == or !=
+
+;C doesn't consider structs to be the same when declared in different places
+even if their members had same types, names, and order
+so to create compatible structs in different places we need to give
+a name to that struct type, a "tag", like:
+struct person {
+	int number;
+	char name[NAME_LEN+1];
+	int phone;
+};
+this semicolon at the end is a must.
+so now to declare structs of this type you do:
+struct person person3, person4;
+you can't just type person person3, person4;
+you can still declare or initialize structs at the end of
+the declaration before the semicolon like
+struct part {
+int number;
+char name[NAME_LEN+1];
+int on_hand;
+} person3, person4;
+
+;another way to create struct names is by typedef, like this:
+typedef struct {
+int number;
+char name[NAME_LEN+1];
+int phone;
+} Person;
+now this is an actual variable type so
+you can do: Person person3;
+notice that in tags the name comes first while in types it comes last.
+and you can't initialize structs when creating a type with typedef
+
+;using tags is usually more prefered than typedef since tags are used in linked lists
+
+;you can use pointers to structs, we'll discuss that later
+
+;you can use compound literals with structs as well, like:
+print_part((struct part) {528, "Disk drive", 10});
+so it creates, on the fly, a struct of type part
+
+;in C, you can only use initializers on the line the struct (or array) was created
+so this is legal:
+struct person person1 = {1, "Hamad", 435}
+while this is illegal if it comes after it:
+person1 = {1, "Hamad", 546}
+so to solve this issue, of initializing a struct after declaration
+you use the compound literal
+where you turn the initializer {1, "Hamad", 435} init a new unnamed struct
+instead of the struct already declared, the assign the new one to the declared one
+so the statement becomes copying structs which is legal instead of
+initializing a struct after declaration which is illegal, like:
+person1 = (struct person) {1, "Hamad", 546}
+this method doesn't work for arrays however as arrays can't be copied like this
+
+;you can nest structs and arrays without restriction
+
+;you can nest structs inside structs like:
+struct person_name {
+	char first[FIRST_NAME_LEN+1];
+	char middle_initial;
+	char last[LAST_NAME_LEN+1];
+};
+struct student {
+	struct person_name name;
+	int id, age;
+	char sex;
+} student1, student2;
+strcpy(student1.name.first, "Fred");
+so we created struct tag person_name,
+then put struct name of tag person_name inside struct student
+then used the syntax student1.name.first
+we reach both student1's and name's elements with the period operator
+
+;you can also nest an array of structs of the same type
+like struct part inventory[50];
+then you can reach elements of inventory[i] through inventory[i].name
+
+;when you use scanf, especially if you wanna take a single character,
+you should add this while loop after it:
+while (getchar != '\n')
+	;
+this flushes the leftovers of the input buffer
+
+;unions are a data structure in C that stores members
+their syntax is like:
+union {
+    int i;
+    double d;
+} u;
+however a union's members overlap in memory
+so int i and double d share the number of bytes of the larger one
+which is double d
+and so changing i or d corrupts the value of the other
+so you can only store one value at a time in a union
+
+;you can initialize a value in unions like:
+union {
+int i;
+double d;
+} u = {5};
+this however only initializes the first member
+you can initialize other members through designators like:
+union {
+int i;
+double d;
+} u = {.i = 7};
+you can only initialize one member though
+
+;you can use unions in:
+1-saving space if there are mutually exclusive options
+2-build mixed ds (ds=data structures)
+
+;it's a good idea to put a union in a struct with another value called kind
+where kind stores the last value modified within the union like
+a double or an int so you can know the current data type of the union
+
+;enumerations are a data type used to make variables with
+a limited set of values, just like a boolean only has true and false
+it is declared like a union or a struct:
+enum {CLUBS, DIAMONDS, HEARTS, SPADES} s1, s2;
+they can also have tags and typedefs, tags like:
+enum suit {CLUBS, DIAMONDS, HEARTS, SPADES};
+and typedef like:
+typedef enum {CLUBS, DIAMONDS, HEARTS, SPADES} Suit;
+
+;the enum constants are treated as integers that
+start with 0, you could however designate them yourself like:
+enum suit {CLUBS = 1, DIAMONDS = 2, HEARTS = 3, SPADES = 4};
+the first constant has the value 0 by default and 
+undesignated ones have value 1 more than the one before it
+so in this:
+enum EGA_colors {BLACK, LT_GRAY = 7, DK_GRAY, WHITE = 15};
+DK_GRAY is 8
+
+;enumerations are a perfect solution for the kind problem with unions
+instead of creating macros or using arbitrary numbers you could use an enum
+
+;in C99, the length of a vla is assigned at runtime and remains const
+
+;null pointers: pointers that don't point to anything
+they have the macro NULL
+this macro is defined in many widely-used libraries
+it is generated by memory allocation functions when they fail
+all non null pointers are true and null is false
+The NULL macro is defined in six headers: <locale.h>, <stddef.h>,
+<stdio.h>, <stdlib.h>, <string.h>, and <time.h>. (The C99 header
+<wchar.h> also defines NULL.)
+
+;void pointers: they are just addresses, can't do arithmetics on them
+
+;memory allocation functions grant dynamic storage allocation and
+you can get them from <stdlib.h>, which are:
+1-malloc:
+void *malloc(size_t size);
+malloc allocates a block of size bytes and returns a pointer to it
+when it fails it returns a null pointer
+the pointer returned by malloc will be automatically converted to
+the type of the variable pointer it's assigned to
+it's better to use a cast nevertheless to avoid problems
+to put a string for example in the memory used by malloc use strcpy
+when allocating space for an array of n elements use:
+malloc(n*sizeof(array_type))
+2-calloc:
+void *calloc(size_t nmemb, size_t size);
+calloc is malloc but with optimization for arrays
+instead of malloc(n*sizeof(type)) you use calloc(n, sizeof(type))
+the difference between malloc and calloc is that
+malloc gives an adress of a block that might contain garbage
+while calloc cleans it up and makes all its contents 0
+you can also use calloc to make room for structs or something
+it will also return a null pointer if it fails
+3-realloc:
+void *realloc(void *ptr, size_t size);
+a ptr passed to realloc must be a result of malloc, calloc, or realloc
+if it's not, undefined behaviour occurs, because those three functions provide
+certain metadata that realloc absolutely needs
+realloc increases or decreases the size of a memory block to size bytes
+you give it the new size
+realloc does not change the added bytes, like malloc
+if realloc can't increase the block it returns a nullpointer
+if realloc is called with a nullpointer, it is like malloc
+if realloc has size set to 0, it frees the block
+it usually won't move the bytes, if it can't enlarge however,
+it could move to another address, copy the bytes there, enlarge the block,
+then return the new pointer.
+
+;malloc and memory functions deal with the heap
+
+;if you malloc two pointers, then make the first pointer point
+to the same block as the second one
+the first one won't be pointed at by anything, so it will be called garbage
+modern languages have garbage collection to remove such garbage
+since memory made in the heap is usually static
+in C however, you have to free garbage yourself
+else, it will be considered a memory leak, leaving garbage around
+
+;the free function:
+void free(void *ptr);
+frees blocks of memory allowing them to be used
+by malloc and other functions again
+the argument to free must be a pointer returned by a memory allocation function
+
+;a dangling pointer is a pointer that doesn't point to any proper memory block
+it was pointer to a valid block, but that block was freed
+there is also an uninitialized pointer that wasn't assigned an adress using &
+or a valid malloc block on declaration
+trying to modify the value of a pointer like that causes undefined behaviour
+Dangling pointers can be hard to spot, since several pointers may point to the
+same block of memory. When the block is freed, all the pointers are left dangling.
+
+;a linked list is a data structures consisting of nodes where each node has
+an element, and a pointer to the next node
+a linked list is more flexible than an array, you can insert and delete nodes easily
+accessing a node is faster if it's nearer, slower if it's further, because
+you lose the random access property of arrays where you access everything equally
+
+;to set up a linked list you'll need to create a node, a simple way is structs like:
+struct node {
+int value;          /* data stored in the node */
+struct node *next; /* pointer to the next node */
+};
+struct node * is a pointer to another node
+of course the name node is just a random tag
+
+;you're required to use tags, not typedefs, in linked lists.
+
+;we'll also need a variable indicating the beginning of the linked list
+by being a pointer to its first element, like:
+struct node *first = NULL;
+where its value is NULL cuz it's initially empty
+
+;to create a node you need three steps:
+1-allocate memory
+2-store data
+3-insert node
+like:
+struct node *new_node;
+new_node = malloc(sizeof(struct node));
+(*new_node).value = 10;
+
+;there's an operator in C called the right pointer arrow
+it's used when you're accessing a member of a structure using a pointer
+it's like:
+pointer->member = value
+instead of:
+(*pointer).member = value
+it can also be used as an lvalue like any other variable
+
+;to add a new node to the linked list, you add it backwards,
+meaning the new node will be the new beginning of the linked list
+so you make the new node point to first, which is the previous beginning and
+the node right after it
+then you make first point at the new node which becomes the new beginning
+so now you have two nodes, where first points at the newer one as the beginning
+and the newer points at the older one when it pointed at first before
+because first used to be the old first node, which is now after the actual first node
+so basically you take a step backwards
+
+;a function to add a node to a linked list would be like:
+struct node *add_to_list(struct node *list, int n) {
+	struct node *new_node;
+	new_node = malloc(sizeof(struct node));
+	if (new_node == NULL) {
+		printf("Error: malloc failed in add_to_list\n");
+		exit(EXIT_FAILURE);
+	}
+
+	new_node->value = n;
+	new_node->next = list;
+	return new_node;
+}
+where we add a node by assigning the return to first, like:
+first = add_to_list(first, 10);
+and we can search the list using a for loop like:
+for (p = first; p != NULL; p = p->next)
+where p = p->next assigns p to the next node in the list
+
+;to delete a node you have three steps:
+1-find the node, make sure you keep
+its pointer and the pointer of the previous node
+2-change the previous node so it bypasses the deleted node
+3- free the space taken by the deleted node
+
+;when a list is ordered it's called an ordered list (WOAH UNBELIEVABLE)
+inserting a node to an ordered list is more difficult since
+you can't just go back a step like before
+searching however becomes easier
+
+;to modify pointers in function you need to pass them pointers of pointers
+which is like: int **x, this will make int *x modify-able
+it can allow the function make the pointer point somewhere else
+
+;you can make pointers to functions when you need
+a function to be an argument to another function
+like integrating a mathematical function
+or a function that does function f on a and b
+you do it like:
+double integrate(double (*f)(double), double a, double b);
+where the parentheses in (*f) are mandatory or it'll be considered
+that the return of f is a pointer
+you can also just do:
+double integrate(double f(double), double a, double b);
+and when you call the function it's like:
+result = integrate(sin, 0.0, PI / 2);
+so you write the function sin without parentheses
+since functions without parentheses are
+treated like pointers to the function
+then inside result, we can call f by the indirection operator
+something like: y = (*f)(x);
+instead of this you could also do: f(x)
+meaning that function names in C are inherently pointers
+
+;you could use pointers to functions as variables
+or array elements
+or whatever really
+creating an array of pointers to functions is like:
+void (*file_cmd[])(void) = {new_cmd, ... , exit_cmd};
+then subscript and call like:
+(*file_cmd[n])();
+ /* or file_cmd[n](); */
+
+;restricted pointers are a declaration that a the block of
+memory pointed at by the restricted pointer should only
+be ever modified through that pointer itself not through
+any other means
+the effect of the restriction occurs throughout the scope
+where the pointer exists.
+it's declared like:
+int * restrict p;
+it's not that important for now as it is mostly a documentation
+
+;there existed something called the struct hack
+which is defining a char array (string) inside a struct
+with only 1 element as its initial size
+then you add memory to the struct equal to the length of the string
+like:
+struct vstring {
+int len;
+char chars[1];
+};
+…
+struct vstring *str = malloc(sizeof(struct vstring) + n - 1);
+str->len = n;
+and C99 recognized the usefullness of this so with the introduction
+of vlas they also allowed vlas inside structs like:
+struct vstring {
+int len;
+char chars[];
+ /* flexible array member - C99 only */
+};
+which is called a flexible array member
+where it's an array member inside a struct but with flexible size
+it has special rules like that the flexible array needs to
+be the last member of the struct
+and it needs at least 1 other member beside it
+copying a struct with a flexible array won't copy the flexible array
+using sizeof on the struct will neglect the size of the array
+meaning it is an incomplete type
+an incomplete type is one missing the information needed to determine
+its size and how much memory it requires
+an incomplete type can't be a member of a struct
+or an element of an array
+you can make pointers to them though, and put those pointers in arrays
+
+;the NULL macro has the value zero
+but when a zero is assigned to a pointer it's a null pointer
+so we use the macro to avoid confusion
+NULL however is declared as a 0 with type void * not int
+this protects it from being assigned to normal numbers
+also in variable length parameters, there's no defined
+parameters for arguments, so passing NULL as a normal 0
+would pass an int, while passing it as a void * passes a null pointer
+
+;also never use NULL as a null character lol
+you could define it as NUL if you really want to
+
+;an idiom to use when assigning memory assigning memory to a
+pointer using malloc is:
+p = malloc(sizeof(*p));
+where even if p is uninitialized sizeof just returns the size of
+the data type that p should point to
+so this guarantees the memory is always the suitable amount
+not more or less
+of course an array would be like:
+p = malloc(n * sizeof(*p));
+
+;pointers can be converted to and from void * extremely easily
+
+;a declaration in C is like:
+specifiers declarators;
+where specifiers are:
+1-storage classes:
+auto, static, extern, register
+2-type qualifiers:
+const, volatile, restrict
+3-type specifiers:
+void, char, int, short, long, float, double, signed, unsigned
+4-function specifier:
+inline
+the only restriction on specifiers is that storage classes come first
+declarators are the name of the variable followed by what specifies it
+if nothing, it's a normal variable
+if a [] it's an array
+if preceded by a * it's a pointer
+if followed by a () it's a function
+several declarators can be separated by commas for common specifiers like:
+int x, *y, z[];
+
+;variables have three properties:
+1-storage duration:
+it can either be automatic(ends with the block)
+or static (persists until freed)
+2-scope:
+the block in which the variable can be referenced(called)
+it can either be block scope (disappears with block)
+or file scope (persists throughout the whole file)
+3-linkage:
+external linkage is shared with all files of a program
+internal linkage is restricted to one file,
+visible to all its function
+no linkage makes a variable adhere to scope rules
+
+;by default:
+any variable declared inside a block has:
+	automatic storage duration
+	block scope
+	no linkage
+any variable declared outside any block has:
+	static storage duration
+	file scope
+	external linkage
+you can modify their properties through storage classes
+
+;the four storage classes are:
+1-auto:
+only availabe to variables in blocks
+a file with auto has automatic sd, block scope, and no linkage
+aka the default
+2-static:
+when used inside a block makes storage duration static
+when used outside a block makes linkage internal
+3-extern:
+it declares a variable without defining it
+aka it tells the scope there's a variable named i
+but it doesn't create it
+it usually uses i from another source, probably another file
+if however the variable isn't already defined it defines it
+4-2-static:
+when used inside a block makes storage duration static
+when used outside a block makes linkage internal
+3-extern:
+it declares a variable without defining it
+aka it tells the scope there's a variable named i
+but it doesn't create it
+it usually uses i from another source, probably another file
+if however the variable isn't already defined it defines it
+extern has no effect on linkage
+4-register:
+register is a request (not a command) to the compiler to
+store a variable inside a register not main memory
+it's only legal inside a block
+register is the same as auto except it's faster
+and doesn't have an address
+
+;functions can use extern to indicate external linkage
+or static to indicate internal linkage
+
+;static functions are useful when you only need the function
+in its home file and nowhere else, making it:
+1-easier to maintain (you don't have to edit the whole program for them)
+2-reduces name space (its name can be used somewhere else)
+
+;the three type qualifiers are:
+1-const:
+it declares a variable that can't be changed
+and has some advantages:
+	1-documentation
+	2-the compiler checks for modification attempts
+	3-can help the computer identify where to store information
+const is different from #define in that:
+	const can be used for anything
+	and it has a type
+	and it adheres to variable properties like scope
+	***const values can't be used in constant expressions
+	you can use addresses & to them
+2-volatile and 3-restricted won't be discussed here
+
+;an array declarator may be left empty if:
+it's a parameter
+it has an initializer
+or its storage class is extern
+
+;to read complex declarators adhere to two rules:
+1-read inside out
+2-favor [] and () over *
+
+;functions can't return arrays or functions
+arrays of functions aren't possible
+
+;you can use typedefs to simplify complex declarators
+
+;when you declare a variable then initialize it like:
+int x = 4;
+this = is the initialization operator, different from assignment
+
+;initializers to static variables must be constant expressions
+
+;if a variable is auto it need not a constant expression
+
+;a brace-enclosed initializer of an array a union or a struct must
+be constant expressions as well
+
+;a static variable is initialized to a zero suitable to its type
+an int is 0, a pointer is NULL, and so on
+
+;i won't talk about inline functions for now
+
+;
