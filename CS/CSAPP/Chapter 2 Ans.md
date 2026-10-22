@@ -1,6 +1,6 @@
 ## Chapter Problems
-- Skipped: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.14, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 2.22, 2.23, 2.24, 2.28, 2.29, 2.30, 2.33, 2.34, 2.36, 2.39, 2.45, 2.46, 2.47, 2.48, 2.49, 
-- To be done: 2.35, 2.36, 2.37
+- Skipped: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 2.14, 2.16, 2.17, 2.18, 2.19, 2.20, 2.21, 2.22, 2.23, 2.24, 2.28, 2.29, 2.30, 2.33, 2.34, 2.36, 2.39, 2.45, 2.46, 2.47, 2.48, 2.49, 2.50, 2.52, 2.53, 
+- To be done: 2.35, 2.36, 2.37, 2.51, 
 - 2.10:
 	- ![[Pasted image 20260923105724.png]]
 	- step 1: a, a\^b
@@ -82,4 +82,13 @@
 	- E. False due to T_min
 	- F. true
 	- G. true when we substitute ~y as -y-1
-- 
+- 2.54:
+	- ![[Pasted image 20261022090210.png]]![[Pasted image 20261022090225.png]]
+	- A. always true, because converting to double preserves the value.
+	- B. It can change, because the value can be rounded, aka the range of explicit numbers a float can hold is smaller than that of int, so at larger ints the float will start to round numbers in scientific notation. Since floats can hold up to 23bits, so that its limit is $16,777,216$.
+	- C. Any number greater than $16,777,216$, or with more precision than 23 bits in general, will be rounded, and any number greater than $\sim\mathbf{3.40 \times 10^{38}}$ (the highest possible float) will turn to infinity (positive or negative).
+	- D. always true as double holds all explicit and implicit values of float.
+	- E. It should always be true because it's just a change in one bit.
+	- F. They should be true because it's too small a number for any rounding problems to occur.
+	- G. That is always true except at NaN.
+	- H. Not always true because of the possibility of overflow.

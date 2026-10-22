@@ -109,10 +109,32 @@
 - Rational numbers are in the form $V = (-1)^s * x * 2^y$, which is called IEEE floating point representation.
 - Floating point is simply considering numbers to the right of the 'point' as the numeric place value (1 or 0 in case of binary) multiplied by a negative power of 2, starting 1.
 - Format Structure: Floating-point values encode numbers in scientific form as $(-1)^s \times M \times 2^E$, divided into three fields: a Sign bit ($s$), an Exponent field ($\text{exp}$), and a Fraction field ($\text{frac}$).
-- Normalized Values (Standard Case): Occur when $\text{exp}$ is neither all zeros nor all ones. The real exponent is decoded with a bias as $E = e - \text{Bias}$ (where $\text{Bias} = 127$ for single precision), and the significand has an implicit leading one ($M = 1 + f$), yielding an extra bit of precision for free.
+- ![[Pasted image 20261022090637.png]]
+- **Normalized Values (Standard Case)**: Occur when $\text{exp}$ is neither all zeros nor all ones. The real exponent is decoded with a bias as $E = e - \text{Bias}$ (where $\text{Bias} = 127$ for single precision), and the significand has an implicit leading one ($M = 1 + f$), yielding an extra bit of precision for free.
 - **Denormalized Values (Near Zero)**: Occur when $\text{exp}$ is all zeros. The exponent is fixed to $E = 1 - \text{Bias}$, and the implicit leading one is dropped ($M = f$), enabling the representation of exact $\pm 0.0$ and providing gradual underflow for numbers between $0$ and $2^{-126}$.
 - **Special Values (Infinity and Errors)**: Occur when $\text{exp}$ is all ones. If $\text{frac}$ is all zeros, the value represents $\pm\infty$ (overflow or division by zero); if $\text{frac}$ is non-zero, it represents $\text{NaN}$ (invalid operations like $\sqrt{-1}$).
 - **Exponent Biasing Purpose**: Exponents are shifted by an offset ($\text{Bias}$) rather than stored in two's complement so that positive and negative powers can be sorted and compared using standard, fast unsigned integer comparison logic.
   
   (AI-generated notes)
 
+- IEEE standard has 4 rounding modes:
+	- Round to even (nearest, then nearest even number)
+	- Round towards zero
+	- Round down
+	- Round up
+- Round to even is the default mode.
+- To round binary numbers, you have to look at three numbers after the LSB (least significant bit):
+	- G, the bit right after it.
+	- R, the bit right after G.
+	- S, the OR of all the bits after R.
+- If G = 0, the number is less than halfway to the next integer.
+- If G = 1, R and S = 0, the number is exactly midway, so in round-to-even mode, if LSB is 0 round down, and if it's 1 round up.
+- If G = 1, and at least R or S = 1, it's more than halfway.
+- 1/+0 is +infinity, while 1/-0 is -infinity.
+- Floating point arithmetic forms an abelian group, with respect to changes due to rounding. It is however always Commutative.
+- Floating point arithmetic isn't associative due to rounding.
+- Floating point numbers all have inverses except infinites and NaN.
+- Floating point arithmetic has an advantage over signed and unsigned arithmetic, which is that if $a \geq b$, then $a +^f x >= b +^f x$ for any values of a, b, and x other than NaN.
+- Floating point multiplication is not distributive.
+- ![[Pasted image 20261021183235.png]]
+- ![[Pasted image 20261022085906.png]]
